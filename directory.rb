@@ -17,14 +17,20 @@ def input_students
   students
 end
 
+def begin_with(students)
+  puts "Enter the first letter of the students name you wish to view"
+  choice = gets.chomp.downcase
+  students.select{|student| student[:name].downcase.start_with?(choice)}
+end
+
 def print_header
   puts "The students of Villains Academy"
   puts "-------------"
 end
 
 def print(students)
-  students.each do |student|
-    puts "#{student[:name]} (#{student[:cohort]} cohort)"
+  students.each_with_index do |student, index|
+    puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)"
   end
 end
 
@@ -33,6 +39,7 @@ def print_footer(students)
 end
 
 students = input_students
+students_start_with = begin_with(students)
 print_header
-print(students)
-print_footer(students)
+print(students_start_with)
+print_footer(students_start_with)
