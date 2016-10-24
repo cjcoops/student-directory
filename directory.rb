@@ -4,12 +4,16 @@ def input_students
   #create an empty array
   students = []
   #get the first name
-  name = gets.chomp
+  name = gets.tr("\n","")
   #while the name is not empty, repeat this code
   while !name.empty? do
+    puts "Which cohort is #{name} in?"
+    cohort = gets.tr("\n","").downcase.to_sym
+    if cohort.empty? then cohort = :november end
     #add the student hash to the array
-    students << {name: name, cohort: :november}
-    puts "Now we have #{students.count} students"
+    students << {name: name, cohort: cohort}
+    puts "Now we have #{students.count} #{students.count == 1? "student" : "students"}"
+    puts "Add the next student"
     #get another name from the user
     name =  gets.chomp
   end
@@ -24,22 +28,31 @@ def begin_with(students)
 end
 
 def print_header
-  puts "The students of Villains Academy"
-  puts "-------------"
+  puts "The students of Villains Academy".center(30)
+  puts "-------------".center(30)
 end
 
 def print(students)
-  students.select{|student| student[:name].length < 13}.each_with_index do |student, index|
-    puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)"
+  students.select{|student| student[:name].length < 12}.each_with_index do |student, index|
+    puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)".center(30)
+  end
+end
+
+def print_grouped(students)
+  #get array of different cohorts
+  cohorts = []
+  students.each do |student|
+    cohorts <<  student[:cohort]
   end
 end
 
 def print_footer(students)
-  puts "Overall, we have #{students.count} great students"
+  puts "Overall, we have #{students.count} great #{students.count == 1? "student" : "students"}".center(30)
 end
 
 students = input_students
-students_start_with = begin_with(students)
+#students_start_with = begin_with(students)
 print_header
-print(students_start_with)
-print_footer(students_start_with)
+print(students)
+print_footer(students)
+#print_grouped(students)
