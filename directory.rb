@@ -1,4 +1,5 @@
 @students = [] # an empty array accessible to all methods
+require 'csv'
 
 def input_students
   puts "Please enter the names of the students"
@@ -24,11 +25,9 @@ def save_students
   puts "What filename would you like to save the list to?"
   filename = STDIN.gets.chomp
   #write to file
-  File.open(filename, "w") do |file|
+  CSV.open(filename, "w") do |csv|
     @students.each do |student|
-      student_data = [student[:name], student[:cohort]]
-      csv_line = student_data.join(",")
-      file.puts csv_line
+      csv << [student[:name], student[:cohort]]
     end
   end
   puts "Saved #{@students.count} #{@students.count == 1? "student" : "students"} to #{filename}"
@@ -40,12 +39,11 @@ def load_students(filename = "prompt")
     filename = STDIN.gets.chomp
   end
   #load from file
-  File.open(filename, "r") do |file|
-    file.readlines.each do |line|
-      name, cohort = line.chomp.split(',')
-      @students << {name: name, cohort: cohort.to_sym}
-    end
+  CSV.foreach(filename) do |row|
+    name, cohort = row
+    @students << {name: name, cohort: cohort.to_sym}
   end
+
   puts "Loaded #{@students.count} #{@students.count == 1? "student" : "students"} from #{filename}"
 end
 
