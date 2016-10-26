@@ -17,6 +17,7 @@ def input_students
     #get another name from the user
     name =  STDIN.gets.chomp
   end
+  puts "You have successfully inputted #{@students.count} #{@students.count == 1? "student" : "students"}!"
 end
 
 def save_students
@@ -29,6 +30,7 @@ def save_students
     file.puts csv_line
   end
   file.close
+  puts "You have saved #{@students.count} #{@students.count == 1? "student" : "students"} to students.csv!"
 end
 
 def load_students(filename = "students.csv")
@@ -38,26 +40,13 @@ def load_students(filename = "students.csv")
     @students << {name: name, cohort: cohort.to_sym}
   end
   file.close
+  puts "You have loaded #{@students.count} #{@students.count == 1? "student" : "students"} from students.csv!"
 end
-=begin
+
 def try_load_students
   filename = ARGV.first #first argument from the command line
   return if filename.nil? #get out of method if it isn't given
   if File.exists?(filename) #if it exists
-    load_students(filename)
-    puts "Loaded #{@students.count} from #{filename}"
-  else #if it doesn't exist
-    puts "Sorry, #{filename} doesn't exist."
-    exit
-  end
-end
-=end
-def try_load_students
-  filename = ARGV.first #first argument from the command line
-  #load students.csv automatically if it exists
-  if filename.nil? && File.exists?("students.csv")#get out of method if it isn't given
-    load_students
-  elsif File.exists?(filename) #if it exists
     load_students(filename)
     puts "Loaded #{@students.count} from #{filename}"
   else #if it doesn't exist
