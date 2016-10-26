@@ -23,15 +23,14 @@ end
 def save_students
   puts "What filename would you like to save the list to?"
   filename = STDIN.gets.chomp
-  #open the file for writing
-  file = File.open(filename, "w")
-  #iterate over the array of students
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
+  #write to file
+  File.open(filename, "w") do |file|
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort]]
+      csv_line = student_data.join(",")
+      file.puts csv_line
+    end
   end
-  file.close
   puts "Saved #{@students.count} #{@students.count == 1? "student" : "students"} to #{filename}"
 end
 
@@ -40,12 +39,13 @@ def load_students(filename = "prompt")
     puts "What filename would you like to open?"
     filename = STDIN.gets.chomp
   end
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(',')
-    @students << {name: name, cohort: cohort.to_sym}
+  #load from file
+  File.open(filename, "r") do |file|
+    file.readlines.each do |line|
+      name, cohort = line.chomp.split(',')
+      @students << {name: name, cohort: cohort.to_sym}
+    end
   end
-  file.close
   puts "Loaded #{@students.count} #{@students.count == 1? "student" : "students"} from #{filename}"
 end
 
