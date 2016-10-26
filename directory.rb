@@ -8,10 +8,10 @@ def input_students
   #while the name is not empty, repeat this code
   while !name.empty? do
     puts "Which cohort is #{name} in?"
-    cohort = STDIN.gets.tr("\n","").downcase.to_sym
-    if cohort.empty? then cohort = :november end
+    cohort = STDIN.gets.chomp.downcase.to_sym
+    if cohort.empty? then cohort = "unknown" end
     #add the student hash to the array
-    @students << {name: name, cohort: cohort}
+    @students << {name: name, cohort: cohort.to_sym}
     puts "Now we have #{@students.count} #{@students.count == 1? "student" : "students"}"
     puts "Add the next student"
     #get another name from the user
@@ -39,7 +39,7 @@ def load_students(filename = "students.csv")
   end
   file.close
 end
-
+=begin
 def try_load_students
   filename = ARGV.first #first argument from the command line
   return if filename.nil? #get out of method if it isn't given
@@ -51,12 +51,20 @@ def try_load_students
     exit
   end
 end
-
-#def begin_with(students)
-#  puts "Enter the first letter of the students name you wish to view"
-#  choice = gets.chomp.downcase
-#  students.select{|student| student[:name].downcase.start_with?(choice)}
-#end
+=end
+def try_load_students
+  filename = ARGV.first #first argument from the command line
+  #load students.csv automatically if it exists
+  if filename.nil? && File.exists?("students.csv")#get out of method if it isn't given
+    load_students
+  elsif File.exists?(filename) #if it exists
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}"
+  else #if it doesn't exist
+    puts "Sorry, #{filename} doesn't exist."
+    exit
+  end
+end
 
 def print_header
   puts "The students of Villains Academy".center(30)
@@ -88,8 +96,6 @@ end
 #print_footer(students)
 #print_grouped(students)
 
-
-
 def interactive_menu
   loop do
     # 1. print the menu and ask the user what to do
@@ -108,9 +114,13 @@ def print_menu
 end
 
 def show_students
-  print_header
-  print_students_list
-  print_footer
+  if @students.count == 0
+    puts "There are no students. Input students or load the list."
+  else
+    print_header
+    print_students_list
+    print_footer
+  end
 end
 
 def process(selection)
