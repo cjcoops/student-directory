@@ -64,19 +64,28 @@ def print_header
   puts "-------------".center(30)
 end
 
+=begin
 def print_students_list
   @students.select{|student| student[:name].length < 12}.each_with_index do |student, index|
     puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)".center(30)
   end
 end
+=end
 
-#def print_grouped
-#  #get array of different cohorts
-#  cohorts = []
-#  @students.each do |student|
-#    cohorts <<  student[:cohort]
-#  end
-#end
+def print_students_list
+  cohorts = []
+  @students.each{|student| cohorts.push(student[:cohort])}
+  student_no = 1
+
+  cohorts.uniq.sort.each do |cohort|
+  	puts "#{cohort.to_s.capitalize} Cohort:"
+	  @students.select{|student| student[:cohort] == cohort}.each do |student|
+		    puts "#{student_no}. #{student[:name]}".center(30)
+		    student_no += 1
+	  end
+  end
+end
+
 
 def print_footer
   puts "Overall, we have #{@students.count} great #{@students.count == 1? "student" : "students"}".center(30)
@@ -135,3 +144,4 @@ end
 
 try_load_students
 interactive_menu
+puts @students
